@@ -1,4 +1,5 @@
 from django.conf import settings
+from botocore.config import Config
 
 AWS_REGION = getattr(settings, 'EB_AWS_REGION', 'us-east-1')  # type: str
 
@@ -25,6 +26,9 @@ DEAD_LETTER_MODE = getattr(settings, 'EB_SQS_DEAD_LETTER_MODE', False)  # type: 
 
 AWS_MAX_RETRIES = getattr(settings, 'EB_SQS_AWS_MAX_RETRIES', 30)  # type: int
 
+METADATA_SERVICE_NUM_ATTEMPTS = getattr(settings, 'AWS_METADATA_SERVICE_NUM_ATTEMPTS', None)  # type: int
+METADATA_SERVICE_TIMEOUT = getattr(settings, 'AWS_METADATA_SERVICE_TIMEOUT', None)  # type: int
+
 REFRESH_PREFIX_QUEUES_S = getattr(settings, 'EB_SQS_REFRESH_PREFIX_QUEUES_S', 10)  # type: int
 
 QUEUE_MESSAGE_RETENTION = getattr(settings, 'EB_SQS_QUEUE_MESSAGE_RETENTION', '1209600')  # type: str
@@ -33,3 +37,18 @@ QUEUE_VISIBILITY_TIMEOUT = getattr(settings, 'EB_SQS_QUEUE_VISIBILITY_TIMEOUT', 
 MIN_HEALTHCHECK_WRITE_PERIOD_S = getattr(settings, 'EB_SQS_MIN_HEALTHCHECK_WRITE_PERIOD_S', 10)  # type: int
 HEALTHCHECK_UNHEALTHY_PERIOD_S = getattr(settings, 'EB_SQS_HEALTHCHECK_UNHEALTHY_PERIOD_S', int(QUEUE_VISIBILITY_TIMEOUT))  # type: int
 HEALTHCHECK_FILE_NAME = getattr(settings, 'EB_SQS_HEALTHCHECK_FILE_NAME', 'healthcheck.txt')  # type: str
+
+
+def get_boto3_config():
+    """
+    Build boto3 Config object with retry and metadata service settings.
+    """
+    config_params = {'retries': {'max_attempts': AWS_MAX_RETRIES}}
+    
+    if METADATA_SERVICE_NUM_ATTEMPTS is not None:
+        config_params['metadata_service_num_attempts'] = METADATA_SERVICE_NUM_ATTEMPTS
+        
+    if METADATA_SERVICE_TIMEOUT is not None:
+        config_params['metadata_service_timeout'] = METADATA_SERVICE_TIMEOUT
+        
+    return Config(**config_params)

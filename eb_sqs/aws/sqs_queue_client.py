@@ -12,7 +12,7 @@ class SqsQueueClient(QueueClient):
     def __init__(self):
         self.sqs = boto3.resource('sqs',
                                   region_name=settings.AWS_REGION,
-                                  config=Config(retries={'max_attempts': settings.AWS_MAX_RETRIES})
+                                  config=settings.get_boto3_config()
                                   )
         self.queue_cache = {}
 

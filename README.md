@@ -140,6 +140,8 @@ The following settings can be used to fine tune django-eb-sqs. Copy them into yo
 - EB_SQS_QUEUE_PREFIX (``): Prefix to use for the queues. The prefix is added to the queue name.
 - EB_SQS_USE_PICKLE (`False`): Enable to use `pickle` to serialize task parameters. Uses `json` as default.
 - EB_SQS_AWS_MAX_RETRIES (`30`): Default retry limit on a boto3 call to AWS SQS.
+- AWS_METADATA_SERVICE_NUM_ATTEMPTS: Number of retry attempts for EC2 metadata service when retrieving IAM role credentials. Useful in environments like AWS Elastic Beanstalk where credential retrieval may be unreliable.
+- AWS_METADATA_SERVICE_TIMEOUT: Timeout in seconds for EC2 metadata service requests when retrieving IAM role credentials. Helps control how long boto3 waits for credential responses.
 - EB_SQS_REFRESH_PREFIX_QUEUES_S (`10`): Minimal number of seconds to wait between refreshing queue list, in case prefix is used
 
 
