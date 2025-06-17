@@ -1,3 +1,5 @@
+import os
+from typing import Optional
 from django.conf import settings
 
 AWS_REGION = getattr(settings, 'EB_AWS_REGION', 'us-east-1')  # type: str
@@ -24,6 +26,8 @@ WORKER_FACTORY = getattr(settings, 'EB_SQS_WORKER_FACTORY', None)  # type: Worke
 DEAD_LETTER_MODE = getattr(settings, 'EB_SQS_DEAD_LETTER_MODE', False)  # type: bool
 
 AWS_MAX_RETRIES = getattr(settings, 'EB_SQS_AWS_MAX_RETRIES', 30)  # type: int
+AWS_METADATA_SERVICE_TIMEOUT = getattr(settings, 'EB_AWS_METADATA_SERVICE_TIMEOUT', None)  # type: Optional[int]
+AWS_METADATA_SERVICE_NUM_ATTEMPTS = getattr(settings, 'EB_AWS_METADATA_SERVICE_NUM_ATTEMPTS', None)  # type: Optional[int]
 
 REFRESH_PREFIX_QUEUES_S = getattr(settings, 'EB_SQS_REFRESH_PREFIX_QUEUES_S', 10)  # type: int
 
@@ -33,3 +37,10 @@ QUEUE_VISIBILITY_TIMEOUT = getattr(settings, 'EB_SQS_QUEUE_VISIBILITY_TIMEOUT', 
 MIN_HEALTHCHECK_WRITE_PERIOD_S = getattr(settings, 'EB_SQS_MIN_HEALTHCHECK_WRITE_PERIOD_S', 10)  # type: int
 HEALTHCHECK_UNHEALTHY_PERIOD_S = getattr(settings, 'EB_SQS_HEALTHCHECK_UNHEALTHY_PERIOD_S', int(QUEUE_VISIBILITY_TIMEOUT))  # type: int
 HEALTHCHECK_FILE_NAME = getattr(settings, 'EB_SQS_HEALTHCHECK_FILE_NAME', 'healthcheck.txt')  # type: str
+
+def apply_aws_metadata_service_config():
+    """Apply AWS metadata service configuration as environment variables."""
+    if AWS_METADATA_SERVICE_TIMEOUT is not None:
+        os.environ['AWS_METADATA_SERVICE_TIMEOUT'] = str(AWS_METADATA_SERVICE_TIMEOUT)
+    if AWS_METADATA_SERVICE_NUM_ATTEMPTS is not None:
+        os.environ['AWS_METADATA_SERVICE_NUM_ATTEMPTS'] = str(AWS_METADATA_SERVICE_NUM_ATTEMPTS)

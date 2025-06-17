@@ -10,6 +10,8 @@ from eb_sqs.worker.queue_client import QueueClient, QueueDoesNotExistException, 
 
 class SqsQueueClient(QueueClient):
     def __init__(self):
+        settings.apply_aws_metadata_service_config()
+        
         self.sqs = boto3.resource('sqs',
                                   region_name=settings.AWS_REGION,
                                   config=Config(retries={'max_attempts': settings.AWS_MAX_RETRIES})

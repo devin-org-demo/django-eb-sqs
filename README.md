@@ -124,6 +124,8 @@ You can provide on optional `delay` time for the retry, set `count_retries=False
 The following settings can be used to fine tune django-eb-sqs. Copy them into your Django `settings.py` file.
 
 - EB_AWS_REGION (`us-east-1`): The AWS region to use when working with SQS.
+- EB_AWS_METADATA_SERVICE_TIMEOUT (`None`): The timeout (in seconds) for AWS metadata service requests. If not set, uses boto3 default.
+- EB_AWS_METADATA_SERVICE_NUM_ATTEMPTS (`None`): The number of attempts for AWS metadata service requests. If not set, uses boto3 default.
 - EB_SQS_MAX_NUMBER_OF_MESSAGES (`10`): The maximum number of messages to read in a single call from SQS (<= 10).
 - EB_SQS_WAIT_TIME_S (`2`): The time to wait (seconds) when receiving messages from SQS.
 - NO_QUEUES_WAIT_TIME_S (`5`): The time a workers waits if there are no SQS queues available to process.

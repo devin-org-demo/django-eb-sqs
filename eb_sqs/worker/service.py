@@ -41,6 +41,8 @@ class WorkerService(object):
 
         logger.debug('[django-eb-sqs] Connecting to SQS: {}'.format(', '.join(queue_names)))
 
+        settings.apply_aws_metadata_service_config()
+        
         sqs = boto3.resource(
             'sqs',
             region_name=settings.AWS_REGION,
